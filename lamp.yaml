@@ -1,0 +1,34 @@
+version: "3.7"
+
+services:
+
+    server:
+        build:
+            context: .
+            dockerfile: php.Dockerfile
+        restart: always
+        ports: 
+            - "8080:80"
+        volumes:
+            - "./html:/var/www/html"      
+
+    mysql-server:
+        image: mysql
+        command: --default-authentication-plugin=mysql_native_password
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: 1234
+        volumes:
+            - "./database:/var/lib/mysql"
+
+    php-admin:
+#        image: adminer
+        image: phpmyadmin
+        restart: always
+        ports:
+            - "5000:80"
+        environment:
+            - PMA_HOST=mysql-server
+            - PMA_USER=root
+            - PMA_PASSWORD=1234
+    #        - ADMINER_DEFAULT_SERVER=mysql
